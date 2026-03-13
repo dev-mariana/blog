@@ -7,4 +7,6 @@ export default defineNuxtConfig({
       include: ["@vue/devtools-core", "@vue/devtools-kit"],
     },
   },
+  modules: ["@prisma/nuxt", "@nuxt/ui"],
+  css: ["~/assets/css/main.css"],
 });
