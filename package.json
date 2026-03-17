@@ -11,11 +11,15 @@
   },
   "dependencies": {
     "@nuxt/ui": "^4.5.1",
+    "@paralleldrive/cuid2": "^3.3.0",
     "@prisma/nuxt": "^0.3.0",
+    "dotenv": "^17.3.1",
     "nuxt": "^4.4.2",
+    "prisma": "^7.5.0",
     "tailwindcss": "^4.2.1",
     "vue": "^3.5.30",
-    "vue-router": "^5.0.3"
+    "vue-router": "^5.0.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^25.5.0"

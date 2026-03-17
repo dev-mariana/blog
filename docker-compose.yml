@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  pg:
+    image: bitnami/postgresql
+    container_name: blog
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+    volumes:
+      - pg_data:/var/lib/pg/data
+
+volumes:
+  pg_data:
