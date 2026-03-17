@@ -9,4 +9,13 @@ export default defineNuxtConfig({
   },
   modules: ["@prisma/nuxt", "@nuxt/ui"],
   css: ["~/assets/css/main.css"],
+  typescript: {
+    strict: false,
+    tsConfig: {
+      compilerOptions: {
+        strictPropertyInitialization: true,
+        strictNullChecks: true,
+      },
+    },
+  },
 });
