@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../prisma/generated/client';
+import { PrismaClient } from '@prisma/client';
 import { Post } from '../entities/post';
 import { generateId } from '../helpers/generate-id';
 import { IBlogsRepository } from './blogs.interface';

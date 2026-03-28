@@ -1,4 +1,4 @@
-import { Post as RawPost } from '../../../prisma/generated/client';
+import { Post as RawPost } from '@prisma/client';
 import { Post } from '../../entities/post';
 
 export class BlogsMapper {
