@@ -5,19 +5,19 @@ import {
   setResponseStatus,
 } from "h3";
 import { prisma } from "~~/server/config/database/prisma";
-import { BlogsController } from "../../controllers/blogs.controller";
+import { CreatePostController } from "../../controllers/create-post.controller";
 import { BlogsRepository } from "../../repositories/blogs.repository";
 import { BlogsService } from "../../services/blogs.service";
 
 const repository = new BlogsRepository(prisma);
 const service = new BlogsService(repository);
-const controller = new BlogsController(service);
+const controller = new CreatePostController(service);
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   try {
-    const post = await controller.createPost(body);
+    const post = await controller.handle(body);
 
     setResponseStatus(event, 201);
 
