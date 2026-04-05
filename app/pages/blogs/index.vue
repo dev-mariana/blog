@@ -38,9 +38,7 @@
               <h2 class="text-lg font-medium text-gray-100">
                 <nuxt-link @click.stop :to="`/blogs/${post.slug}`" class="hover:underline">{{ post.title }}</nuxt-link>
               </h2>
-              <span class="text-sm text-gray-400">{{
-                formatDate(post.created_at)
-              }}</span>
+              <span class="text-sm text-gray-400">{{ formatDate(post.created_at) }}</span>
             </div>
 
             <p
@@ -50,12 +48,8 @@
               {{ post.content }}
             </p>
 
-            <div class="mt-3 flex items-center space-x-3 text-sm">
-              <span
-                :class="post.published ? 'text-green-400' : 'text-yellow-400'"
-                >{{ post.published ? "Published" : "Draft" }}</span
-              >
-              <nuxt-link @click.stop :to="`/blogs/${post.slug}`" class="text-primary-400 hover:underline">Read</nuxt-link>
+            <div class="mt-3 flex items-center justify-between text-sm">
+              <span :class="post.published ? 'text-green-400' : 'text-yellow-400'">{{ post.published ? "Published" : "Draft" }}</span>
               <nuxt-link @click.stop :to="`/blogs/${post.slug}/edit`" class="text-sm text-gray-300 hover:underline">Edit</nuxt-link>
             </div>
           </div>

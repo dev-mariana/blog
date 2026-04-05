@@ -25,14 +25,7 @@
         <textarea v-model="form.content" rows="6" class="mt-1 block w-full rounded-md border-gray-700 bg-gray-900 text-gray-100 shadow-sm px-3 py-2"></textarea>
       </div>
 
-      <div class="flex items-center">
-        <label class="flex items-center cursor-pointer select-none space-x-3">
-          <input id="published" type="checkbox" v-model="form.published" class="sr-only" />
-          <div :class="['w-11 h-6 rounded-full transition-colors duration-200', form.published ? 'bg-primary-600' : 'bg-gray-600']"></div>
-          <div :class="['absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200', form.published ? 'translate-x-5' : 'translate-x-0']"></div>
-          <span class="text-sm text-gray-300">Publish</span>
-        </label>
-      </div>
+      <!-- Publish control removed from edit form; publishing is handled elsewhere -->
 
       <div class="flex items-center justify-between">
         <div class="text-sm text-red-400" v-if="submissionError">{{ submissionError }}</div>
@@ -70,7 +63,7 @@ type Post = {
 
 const { data: postData, error: fetchError } = await useAsyncData<Post | null>(`post-${slug}`, () => $fetch(`/api/blogs/${slug}`));
 
-const form = reactive({ title: '', slug: '', image: '', content: '', published: false });
+const form = reactive({ title: '', slug: '', image: '', content: '' });
 const errors = reactive<{ title?: string; slug?: string }>({});
 const isSubmitting = ref(false);
 const submissionError = ref('');
@@ -81,7 +74,7 @@ watch(postData, (val) => {
     form.slug = val.slug;
     form.image = val.image || '';
     form.content = val.content || '';
-    form.published = !!val.published;
+    // keep published state managed by server; not editable here
   }
 });
 
@@ -101,7 +94,7 @@ function resetForm() {
     form.slug = postData.value.slug;
     form.image = postData.value.image ?? '';
     form.content = postData.value.content ?? '';
-    form.published = !!postData.value.published;
+    // keep published state managed by server; not editable here
   }
   submissionError.value = '';
 }
@@ -118,7 +111,6 @@ async function onSubmit() {
       slug: form.slug,
       image: form.image || undefined,
       content: form.content || undefined,
-      published: !!form.published,
     };
 
     await $fetch(`/api/blogs/${slug}`, { method: 'PATCH', body: payload });
