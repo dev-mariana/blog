@@ -36,9 +36,16 @@
           <div class="flex-1">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-medium text-gray-100">
-                <nuxt-link @click.stop :to="`/blogs/${post.slug}`" class="hover:underline">{{ post.title }}</nuxt-link>
+                <nuxt-link
+                  @click.stop
+                  :to="`/blogs/${post.slug}`"
+                  class="hover:underline"
+                  >{{ post.title }}</nuxt-link
+                >
               </h2>
-              <span class="text-sm text-gray-400">{{ formatDate(post.created_at) }}</span>
+              <span class="text-sm text-gray-400">{{
+                formatDate(post.created_at)
+              }}</span>
             </div>
 
             <p
@@ -49,8 +56,16 @@
             </p>
 
             <div class="mt-3 flex items-center justify-between text-sm">
-              <span :class="post.published ? 'text-green-400' : 'text-yellow-400'">{{ post.published ? "Published" : "Draft" }}</span>
-              <nuxt-link @click.stop :to="`/blogs/${post.slug}/edit`" class="text-sm text-gray-300 hover:underline">Edit</nuxt-link>
+              <span
+                :class="post.published ? 'text-green-400' : 'text-yellow-400'"
+                >{{ post.published ? "Published" : "Draft" }}</span
+              >
+              <nuxt-link
+                @click.stop
+                :to="`/blogs/${post.slug}/edit`"
+                class="text-sm text-gray-300 hover:underline"
+                >Edit</nuxt-link
+              >
             </div>
           </div>
         </div>
@@ -62,7 +77,7 @@
 <script setup lang="ts">
 import { useAsyncData } from "#app";
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 type Post = {
   id: string;

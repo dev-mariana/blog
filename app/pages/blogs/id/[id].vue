@@ -1,5 +1,9 @@
 <template>
   <div class="max-w-3xl mx-auto p-6">
+    <div class="mb-4">
+      <button @click="goBack" class="px-3 py-1 rounded-md bg-gray-700 text-sm text-gray-100 hover:bg-gray-600">← Back</button>
+    </div>
+
     <div v-if="error" class="text-red-400">{{ error }}</div>
 
     <div v-else-if="!post" class="text-gray-300">Post not found.</div>
@@ -45,6 +49,17 @@ const { data: postData, error: fetchError } = await useAsyncData<Post | null>(`p
 const post = postData.value ?? null;
 const error = ref('');
 if (fetchError.value) error.value = fetchError.value.message || 'Failed to load post.';
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goBack() {
+  if (window?.history?.length > 1) {
+    router.back();
+  } else {
+    router.push('/');
+  }
+}
 
 function formatDate(input: string | Date) {
   const d = typeof input === 'string' ? new Date(input) : input;
