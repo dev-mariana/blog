@@ -55,11 +55,8 @@
                 :class="post.published ? 'text-green-400' : 'text-yellow-400'"
                 >{{ post.published ? "Published" : "Draft" }}</span
               >
-              <nuxt-link
-                :to="`/blogs/${post.slug}`"
-                class="text-primary-400 hover:underline"
-                >Read</nuxt-link
-              >
+              <nuxt-link :to="`/blogs/${post.slug}`" class="text-primary-400 hover:underline">Read</nuxt-link>
+              <nuxt-link :to="`/blogs/${post.slug}/edit`" class="text-sm text-gray-300 hover:underline">Edit</nuxt-link>
             </div>
           </div>
         </div>
