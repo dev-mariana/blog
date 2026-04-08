@@ -61,15 +61,17 @@
                 >{{ post.published ? "Published" : "Draft" }}</span
               >
               <div class="flex items-center space-x-4">
-                <nuxt-link
-                  @click.stop
-                  :to="`/blogs/${post.slug}/edit`"
-                  class="text-sm text-gray-300 hover:underline"
-                  >Edit</nuxt-link
-                >
                 <button
+                  type="button"
+                  @click.stop.prevent="goToEdit(post)"
+                  class="px-3 py-1.5 rounded-md bg-primary-600 text-white text-sm hover:bg-primary-700"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
                   @click.stop.prevent="deletePost(post)"
-                  class="text-sm text-red-400 hover:underline"
+                  class="px-3 py-1.5 rounded-md bg-red-600 text-white text-sm hover:bg-red-700"
                 >
                   Delete
                 </button>
@@ -84,7 +86,7 @@
 
 <script setup lang="ts">
 import { useAsyncData } from "#app";
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
 type Post = {
@@ -124,15 +126,19 @@ function goToPost(post: Post) {
   router.push(`/blogs/id/${post.id}`);
 }
 
+function goToEdit(post: Post) {
+  router.push(`/blogs/${post.slug}/edit`);
+}
+
 async function deletePost(post: Post) {
   const ok = confirm(`Delete "${post.title}"?`);
   if (!ok) return;
 
   try {
-    await $fetch(`/api/blogs/id/${post.id}`, { method: 'DELETE' });
+    await $fetch(`/api/blogs/id/${post.id}`, { method: "DELETE" });
     await refresh();
   } catch (e: any) {
-    error.value = e?.message || 'Failed to delete post.';
+    error.value = e?.message || "Failed to delete post.";
   }
 }
 </script>
