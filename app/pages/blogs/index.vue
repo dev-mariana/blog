@@ -60,12 +60,20 @@
                 :class="post.published ? 'text-green-400' : 'text-yellow-400'"
                 >{{ post.published ? "Published" : "Draft" }}</span
               >
-              <nuxt-link
-                @click.stop
-                :to="`/blogs/${post.slug}/edit`"
-                class="text-sm text-gray-300 hover:underline"
-                >Edit</nuxt-link
-              >
+              <div class="flex items-center space-x-4">
+                <nuxt-link
+                  @click.stop
+                  :to="`/blogs/${post.slug}/edit`"
+                  class="text-sm text-gray-300 hover:underline"
+                  >Edit</nuxt-link
+                >
+                <button
+                  @click.stop.prevent="deletePost(post)"
+                  class="text-sm text-red-400 hover:underline"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -76,7 +84,7 @@
 
 <script setup lang="ts">
 import { useAsyncData } from "#app";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
 type Post = {
@@ -98,7 +106,7 @@ const {
   error: fetchError,
 } = await useAsyncData<Post[]>("posts", () => $fetch("/api/blogs"));
 
-const posts = postsData.value ?? [];
+const posts = computed(() => postsData.value ?? []);
 
 if (fetchError.value) {
   error.value = fetchError.value?.message || "Failed to load posts.";
@@ -114,6 +122,18 @@ const router = useRouter();
 function goToPost(post: Post) {
   // Navigate using the id-based route so the GET-by-id endpoint is used
   router.push(`/blogs/id/${post.id}`);
+}
+
+async function deletePost(post: Post) {
+  const ok = confirm(`Delete "${post.title}"?`);
+  if (!ok) return;
+
+  try {
+    await $fetch(`/api/blogs/id/${post.id}`, { method: 'DELETE' });
+    await refresh();
+  } catch (e: any) {
+    error.value = e?.message || 'Failed to delete post.';
+  }
 }
 </script>
 
