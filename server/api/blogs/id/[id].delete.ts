@@ -1,25 +1,25 @@
-import { createError, defineEventHandler } from "h3";
+import { createError, defineEventHandler, setResponseStatus } from "h3";
 import { prisma } from "~~/server/config/database/prisma";
+import { DeletePostController } from "../../../controllers/delete-post.controller";
 import { BlogsRepository } from "../../../repositories/blogs.repository";
+import { DeletePostService } from "../../../services/delete-post.service";
 
 const repository = new BlogsRepository(prisma);
+const service = new DeletePostService(repository);
+const controller = new DeletePostController(service);
 
 export default defineEventHandler(async (event) => {
   const id = (event.context.params as any)?.id as string;
 
   try {
-    if (!id)
-      throw createError({ statusCode: 400, statusMessage: "Missing id" });
+    await controller.handle(id);
 
-    const existing = await repository.findById(id);
-    if (!existing)
-      throw createError({ statusCode: 404, statusMessage: "Post not found" });
-
-    await repository.delete(id);
+    setResponseStatus(event, 204);
 
     return { success: true };
   } catch (error: any) {
+    const statusCode = error.message === "Post not found" ? 404 : 500;
     const message = error.message || "Failed to delete post";
-    throw createError({ statusCode: 400, statusMessage: message });
+    throw createError({ statusCode, statusMessage: message });
   }
 });
