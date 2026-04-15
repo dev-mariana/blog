@@ -7,10 +7,10 @@ import {
 import { prisma } from "~~/server/config/database/prisma";
 import { CreatePostController } from "../../controllers/create-post.controller";
 import { BlogsRepository } from "../../repositories/blogs.repository";
-import { BlogsService } from "../../services/blogs.service";
+import { CreateBlogService } from "../../services/create-blog.service";
 
 const repository = new BlogsRepository(prisma);
-const service = new BlogsService(repository);
+const service = new CreateBlogService(repository);
 const controller = new CreatePostController(service);
 
 export default defineEventHandler(async (event) => {

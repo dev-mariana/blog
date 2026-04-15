@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { CreatePostRequest, CreatePostResponse } from "../dtos/create-post.dto";
-import { BlogsService } from "../services/blogs.service";
+import { CreateBlogService } from "../services/create-blog.service";
 
 export class CreatePostController {
-  constructor(private readonly blogsService: BlogsService) {}
+  constructor(private readonly blogsService: CreateBlogService) {}
 
   async handle(data: CreatePostRequest): Promise<CreatePostResponse> {
     const createPostBodySchema = z.object({
