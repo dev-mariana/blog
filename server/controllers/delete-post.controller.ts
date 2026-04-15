@@ -11,3 +11,8 @@ export class DeletePostController {
     await this.deleteBlogService.execute(id);
   }
 }
+
+// implement delete on screen
+// implement a back button on create screen
+// test all functionalities
+// update readme
