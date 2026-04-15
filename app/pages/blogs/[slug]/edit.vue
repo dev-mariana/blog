@@ -1,9 +1,18 @@
 <template>
   <div class="max-w-3xl mx-auto p-6">
-    <div class="mb-4">
-      <button @click="goBack" class="px-3 py-1 rounded-md bg-gray-700 text-sm text-gray-100 hover:bg-gray-600">← Back</button>
+    <div class="relative flex items-center justify-center mb-6">
+      <button
+        type="button"
+        @click="goBack"
+        class="absolute left-0 flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Back
+      </button>
+      <h1 class="text-2xl font-semibold text-gray-100">Edit Post</h1>
     </div>
-    <h1 class="text-2xl font-semibold mb-4 text-gray-100">Edit Post</h1>
 
     <form
       @submit.prevent="onSubmit"
