@@ -1,7 +1,7 @@
 import { Post } from '../entities/post';
 import { IBlogsRepository } from '../repositories/blogs.interface';
 
-export class ListBlogsService {
+export class ListPostsService {
   constructor(private readonly blogsRepository: IBlogsRepository) {}
 
   async execute(): Promise<Post[]> {

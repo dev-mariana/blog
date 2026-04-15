@@ -1,11 +1,11 @@
 import { createError, defineEventHandler, readBody } from 'h3';
 import { prisma } from '~~/server/config/database/prisma';
 import { BlogsRepository } from '../../repositories/blogs.repository';
-import { UpdateBlogsService } from '../../services/update-blogs.service';
+import { UpdatePostService } from '../../services/update-post.service';
 import { UpdatePostController } from '../../controllers/update-post.controller';
 
 const repository = new BlogsRepository(prisma);
-const service = new UpdateBlogsService(repository);
+const service = new UpdatePostService(repository);
 const controller = new UpdatePostController(service);
 
 export default defineEventHandler(async (event) => {

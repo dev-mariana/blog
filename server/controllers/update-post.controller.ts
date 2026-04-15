@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { UpdatePostRequest, UpdatePostResponse } from '../dtos/update-post.dto';
-import { UpdateBlogsService } from '../services/update-blogs.service';
+import { UpdatePostService } from '../services/update-post.service';
 
 export class UpdatePostController {
-  constructor(private readonly updateBlogsService: UpdateBlogsService) {}
+  constructor(private readonly updateBlogsService: UpdatePostService) {}
 
   async handle(id: string, data: UpdatePostRequest): Promise<UpdatePostResponse> {
     const schema = z
