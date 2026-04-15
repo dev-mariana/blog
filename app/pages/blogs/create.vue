@@ -1,6 +1,18 @@
 <template>
   <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-2xl font-semibold mb-4 text-gray-100">Create Blog</h1>
+    <div class="relative flex items-center justify-center mb-6">
+      <button
+        type="button"
+        @click="router.back()"
+        class="absolute left-0 flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-100 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Back
+      </button>
+      <h1 class="text-2xl font-semibold text-gray-100">Create Blog</h1>
+    </div>
 
     <form @submit.prevent="onSubmit" class="space-y-6 bg-gray-800 p-6 rounded-md shadow-sm">
       <div>
