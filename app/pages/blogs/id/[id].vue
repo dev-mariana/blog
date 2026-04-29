@@ -9,8 +9,10 @@
     <div v-else-if="!post" class="text-gray-300">Post not found.</div>
 
     <article v-else class="bg-gray-800 p-6 rounded-md shadow-sm">
-      <h1 class="text-2xl font-semibold text-gray-100 mb-2">{{ post.title }}</h1>
-      <div class="text-sm text-gray-400 mb-4">{{ formatDate(post.created_at) }}</div>
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <h1 class="text-2xl font-semibold text-gray-100">{{ post.title }}</h1>
+        <span class="text-sm text-gray-400 whitespace-nowrap mt-1">{{ formatDate(post.created_at) }}</span>
+      </div>
 
       <div v-if="post.image" class="mb-4">
         <img :src="post.image" alt="" class="w-full h-64 object-cover rounded-md" />
