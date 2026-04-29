@@ -64,7 +64,16 @@
         ></textarea>
       </div>
 
-      <!-- Publish control removed from edit form; publishing is handled elsewhere -->
+      <div class="flex items-center">
+        <label class="flex items-center cursor-pointer select-none space-x-3">
+          <div class="relative" role="switch" :aria-checked="form.published">
+            <input id="published" type="checkbox" v-model="form.published" class="sr-only" />
+            <div :class="['w-11 h-6 rounded-full transition-colors duration-200', form.published ? 'bg-primary-600' : 'bg-gray-600']"></div>
+            <div :class="['absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200', form.published ? 'translate-x-5' : 'translate-x-0']"></div>
+          </div>
+          <span class="text-sm text-gray-300">Publish immediately</span>
+        </label>
+      </div>
 
       <div class="flex items-center justify-between">
         <div class="text-sm text-red-400" v-if="submissionError">
@@ -117,7 +126,7 @@ const { data: postData, error: fetchError } = await useAsyncData<Post | null>(
   () => $fetch(`/api/blogs/${slug}`),
 );
 
-const form = reactive({ title: "", slug: "", image: "", content: "" });
+const form = reactive({ title: "", slug: "", image: "", content: "", published: false });
 const errors = reactive<{ title?: string; slug?: string }>({});
 const isSubmitting = ref(false);
 const submissionError = ref("");
@@ -128,9 +137,9 @@ watch(postData, (val) => {
     form.slug = val.slug;
     form.image = val.image || "";
     form.content = val.content || "";
-    // keep published state managed by server; not editable here
+    form.published = val.published;
   }
-});
+}, { immediate: true });
 
 function validate() {
   errors.title = undefined;
@@ -148,7 +157,7 @@ function resetForm() {
     form.slug = postData.value.slug;
     form.image = postData.value.image ?? "";
     form.content = postData.value.content ?? "";
-    // keep published state managed by server; not editable here
+    form.published = postData.value.published;
   }
   submissionError.value = "";
 }
@@ -165,6 +174,7 @@ async function onSubmit() {
       slug: form.slug,
       image: form.image || undefined,
       content: form.content || undefined,
+      published: form.published,
     };
 
     await $fetch(`/api/blogs/${slug}`, { method: "PATCH", body: payload });
