@@ -22,7 +22,28 @@
         <p v-html="post.content"></p>
       </div>
 
-      <div class="mt-6 text-sm text-gray-300">Status: <span :class="post.published ? 'text-green-400' : 'text-yellow-400'">{{ post.published ? 'Published' : 'Draft' }}</span></div>
+      <div class="mt-6 flex items-center justify-between text-sm">
+        <span :class="post.published ? 'text-green-400' : 'text-yellow-400'">
+          {{ post.published ? 'Published' : 'Draft' }}
+        </span>
+        <div class="flex items-center space-x-4">
+          <button
+            type="button"
+            @click="goEdit"
+            class="px-3 py-1.5 rounded-md bg-primary-600 text-white text-sm hover:bg-primary-700"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            @click="handleDelete"
+            :disabled="isDeleting"
+            class="px-3 py-1.5 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-50"
+          >
+            {{ isDeleting ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </div>
     </article>
   </div>
 </template>
@@ -55,11 +76,32 @@ if (fetchError.value) error.value = fetchError.value.message || 'Failed to load 
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+const isDeleting = ref(false);
+
 function goBack() {
   if (window?.history?.length > 1) {
     router.back();
   } else {
     router.push('/');
+  }
+}
+
+function goEdit() {
+  if (post) router.push(`/blogs/${post.slug}/edit`);
+}
+
+async function handleDelete() {
+  if (!post) return;
+  if (!confirm('Are you sure you want to delete this post?')) return;
+
+  isDeleting.value = true;
+  try {
+    await $fetch(`/api/blogs/id/${post.id}`, { method: 'DELETE' });
+    router.push('/');
+  } catch (err: any) {
+    error.value = err?.data?.statusMessage || err?.message || 'Failed to delete post.';
+  } finally {
+    isDeleting.value = false;
   }
 }
 
@@ -70,3 +112,4 @@ function formatDate(input: string | Date) {
 </script>
 
 <style scoped></style>
+
