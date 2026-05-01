@@ -22,7 +22,7 @@ This repository is a minimal blog application built with Nuxt (Vue 3) and Prisma
 - TypeScript
 - Prisma (Postgres)
 - Tailwind CSS
-- Docker & docker-compose (for local Postgres and the app)
+- Docker & docker-compose (for local Postgres)
 
 ## Get the code
 
