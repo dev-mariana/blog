@@ -92,43 +92,61 @@
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div class="modal-box">
+        <div class="modal-box" ref="modalRef">
+          <button
+            type="button"
+            class="modal-close"
+            aria-label="Close dialog"
+            @click="closeDeleteModal"
+          >
+            ×
+          </button>
           <!-- Icon -->
-          <div class="modal-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-              <path d="M10 11v6"/>
-              <path d="M14 11v6"/>
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          <div class="modal-icon" aria-hidden="true">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+              <path d="M10 11v6" />
+              <path d="M14 11v6" />
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
             </svg>
           </div>
 
-          <h2 id="modal-title" class="modal-title">Delete Post</h2>
-          <p class="modal-message">
-            Are you sure you want to delete
-            <span class="modal-post-title">{{ postToDelete?.title }}</span>?
-            This action cannot be undone.
-          </p>
+          <div class="modal-content">
+            <h2 id="modal-title" class="modal-title">Delete Post</h2>
+            <p class="modal-message">
+              Are you sure you want to delete
+              <span class="modal-post-title">{{ postToDelete?.title }}</span
+              >? This action cannot be undone.
+            </p>
 
-          <div class="modal-actions">
-            <button
-              type="button"
-              class="btn-cancel"
-              :disabled="isDeleting"
-              @click="closeDeleteModal"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="btn-delete"
-              :disabled="isDeleting"
-              @click="confirmDelete"
-            >
-              <span v-if="isDeleting" class="spinner" />
-              {{ isDeleting ? "Deleting…" : "Delete" }}
-            </button>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn-cancel"
+                :disabled="isDeleting"
+                @click="closeDeleteModal"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="btn-delete"
+                :disabled="isDeleting"
+                @click="confirmDelete"
+              >
+                <span v-if="isDeleting" class="spinner" />
+                {{ isDeleting ? "Deleting…" : "Delete" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -138,7 +156,7 @@
 
 <script setup lang="ts">
 import { useAsyncData } from "#app";
-import { computed, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 type Post = {
@@ -185,6 +203,27 @@ function goToEdit(post: Post) {
 const showDeleteModal = ref(false);
 const postToDelete = ref<Post | null>(null);
 const isDeleting = ref(false);
+const modalRef = ref<HTMLElement | null>(null);
+
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === "Escape") closeDeleteModal();
+}
+
+watch(showDeleteModal, async (val) => {
+  if (val) {
+    window.addEventListener("keydown", onKeydown);
+    await nextTick();
+    // focus cancel button for keyboard users
+    const btn = modalRef.value?.querySelector<HTMLButtonElement>(".btn-cancel");
+    btn?.focus();
+  } else {
+    window.removeEventListener("keydown", onKeydown);
+  }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", onKeydown);
+});
 
 function openDeleteModal(post: Post) {
   postToDelete.value = post;
@@ -243,6 +282,7 @@ async function confirmDelete() {
   border: 1px solid #374151;
   border-radius: 0.75rem;
   padding: 2rem;
+  position: relative;
   width: 100%;
   max-width: 420px;
   display: flex;
@@ -250,6 +290,67 @@ async function confirmDelete() {
   align-items: center;
   gap: 1rem;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Content wrapper for responsive layout */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .modal-box {
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 720px;
+    /* keep padding similar to mobile */
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .modal-icon {
+    flex: 0 0 72px;
+    width: 72px;
+    height: 72px;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  .modal-content {
+    align-items: flex-start;
+  }
+
+  .modal-message {
+    text-align: left;
+  }
+
+  .modal-actions {
+    justify-content: flex-end;
+    width: auto;
+  }
+
+  /* Prevent action buttons from stretching full-width on larger screens */
+  .btn-cancel,
+  .btn-delete {
+    flex: 0 0 auto;
+    min-width: 110px;
+  }
 }
 
 /* Trash icon */
@@ -307,7 +408,9 @@ async function confirmDelete() {
   font-weight: 500;
   cursor: pointer;
   border: none;
-  transition: background 0.15s ease, opacity 0.15s ease;
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,7 +453,9 @@ async function confirmDelete() {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Modal transition */
@@ -361,7 +466,9 @@ async function confirmDelete() {
 
 .modal-enter-active .modal-box,
 .modal-leave-active .modal-box {
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .modal-enter-from,
