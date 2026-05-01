@@ -159,6 +159,8 @@ function resetForm() {
     form.content = postData.value.content ?? "";
     form.published = postData.value.published;
   }
+  errors.title = undefined;
+  errors.slug = undefined;
   submissionError.value = "";
 }
 
